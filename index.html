@@ -3,88 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SANTA NEXUS | Gold Retro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>SANTA WORKSHOP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #030308;
-            --surface: rgba(15, 15, 35, 0.9);
-            --gold: #d4a843;
-            --gold-light: #f3cf7a;
-            --red: #a52a2a;
-            --text: #ffffff;
-            --border: rgba(212, 168, 67, 0.4);
+            --surface: rgba(12, 12, 28, 0.95);
+            --gold: #c9a84c;
+            --gold-light: #e8d48b;
+            --gold-dark: #8b6914;
+            --red: #b22222;
+            --red-dark: #8b0000;
+            --green: #2e7d32;
+            --text: #f0e6d3;
+            --text2: #a09880;
+            --border: rgba(201, 168, 76, 0.3);
+            --radius: 0px;
         }
-
-        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
         body {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Montserrat', sans-serif;
             background: var(--bg);
             color: var(--text);
             height: 100vh; overflow: hidden;
-            background-image: radial-gradient(circle at top, #0a0a25 0%, #030308 100%);
+            background-image: 
+                radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 100%, rgba(178,34,34,0.06) 0%, transparent 50%);
         }
 
-        /* Эффект снега */
-        .snow { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1; width: 100%; height: 100%; background: url('https://www.transparenttextures.com/patterns/snow.png'); opacity: 0.3; animation: snowMove 20s linear infinite; }
-        @keyframes snowMove { from { background-position: 0 0; } to { background-position: 500px 1000px; } }
+        /* Снег */
+        .snow {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            pointer-events: none; z-index: 1;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="1.5" fill="white" opacity="0.8"/><circle cx="50" cy="30" r="1" fill="white" opacity="0.6"/><circle cx="80" cy="20" r="2" fill="white" opacity="0.7"/><circle cx="30" cy="60" r="1.5" fill="white" opacity="0.5"/><circle cx="70" cy="70" r="1" fill="white" opacity="0.6"/><circle cx="20" cy="80" r="2" fill="white" opacity="0.4"/><circle cx="90" cy="50" r="1.5" fill="white" opacity="0.7"/><circle cx="60" cy="90" r="1" fill="white" opacity="0.5"/></svg>');
+            opacity: 0.5; animation: snowFall 30s linear infinite;
+        }
+        @keyframes snowFall { from { transform: translateY(-100%); } to { transform: translateY(100%); } }
 
-        .app { max-width: 480px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; position: relative; z-index: 2; }
+        .app { max-width: 500px; margin:0 auto; height:100vh; display:flex; flex-direction:column; position:relative; z-index:2; }
 
         /* Header */
         .header {
-            padding: 25px 20px; display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 2px solid var(--gold); background: rgba(5, 5, 15, 0.8); backdrop-filter: blur(10px);
+            padding: 20px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(8,8,20,0.95);
+            border-bottom: 2px solid var(--gold);
+            backdrop-filter: blur(15px);
         }
-        .logo { font-size: 24px; font-weight: 900; letter-spacing: 3px; color: var(--gold); text-shadow: 0 0 10px rgba(212, 168, 67, 0.5); }
+        .logo-main { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; letter-spacing: 4px; color: var(--gold-light); text-transform: uppercase; }
+        .logo-main span { color: var(--red); }
+        .user-icon {
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 2px solid var(--gold); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Playfair Display', serif; font-weight: 900; font-size: 18px;
+            color: var(--gold); background: rgba(201,168,76,0.1);
+            transition: all 0.3s;
+        }
+        .user-icon:hover { background: rgba(201,168,76,0.25); }
 
-        /* Content Area */
-        .content { flex: 1; padding: 20px; overflow-y: auto; padding-bottom: 180px; }
-        .page { display: none; animation: fadeIn 0.4s ease; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Content */
+        .content { flex:1; padding:20px; overflow-y:auto; padding-bottom:170px; }
+        .page { display:none; animation: fadeIn 0.5s ease; }
+        .page.active { display:block; }
+        @keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
 
         /* Cards */
-        .card { 
-            background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 24px; margin-bottom: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        }
+        .card-gold {
+            border: 2px solid var(--gold);
+            background: linear-gradient(180deg, rgba(201,168,76,0.08) 0%, rgba(12,12,28,0.95) 100%);
         }
 
-        /* Vinyl Player */
-        .retro-player {
-            position: fixed; bottom: 85px; left: 15px; right: 15px; max-width: 450px; margin: 0 auto;
-            background: #0a0a1a; border: 2px solid var(--gold); border-radius: 35px;
-            padding: 15px; z-index: 1000; display: flex; align-items: center; gap: 15px;
-            box-shadow: 0 0 30px rgba(212, 168, 67, 0.2);
+        /* Countdown */
+        .countdown-block {
+            text-align: center; padding: 28px;
+            border: 2px solid var(--gold);
+            background: rgba(201,168,76,0.05);
+            margin-bottom: 20px;
         }
-        .vinyl-box { width: 60px; height: 60px; position: relative; }
-        .vinyl {
-            width: 100%; height: 100%; background: #000; border-radius: 50%;
-            border: 4px solid #111; display: flex; align-items: center; justify-content: center;
+        .countdown-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 64px; font-weight: 900; color: var(--gold-light);
+            text-shadow: 0 0 30px rgba(201,168,76,0.3);
+            line-height: 1;
         }
-        .vinyl.playing { animation: spin 5s linear infinite; }
-        .vinyl::after { content:''; width: 14px; height: 14px; background: var(--gold); border-radius: 50%; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .countdown-label {
+            font-size: 12px; letter-spacing: 6px; text-transform: uppercase;
+            color: var(--text2); margin-top: 8px;
+        }
 
-        .player-info { flex: 1; overflow: hidden; }
-        .track-title { font-size: 14px; font-weight: bold; color: var(--gold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .track-artist { font-size: 11px; color: #8e8e93; }
+        /* Buttons */
+        .btn {
+            display: inline-block; padding: 12px 24px; border: 2px solid var(--gold);
+            background: transparent; color: var(--gold-light);
+            font-family: 'Montserrat', sans-serif; font-weight: 700;
+            font-size: 11px; text-transform: uppercase; letter-spacing: 3px;
+            cursor: pointer; transition: all 0.3s; text-align: center; width: 100%;
+        }
+        .btn:hover { background: var(--gold); color: #000; }
+        .btn-red { border-color: var(--red); color: var(--red); }
+        .btn-red:hover { background: var(--red); color: #fff; }
+        .btn-fill { background: var(--gold); color: #000; }
+        .btn-fill:hover { background: var(--gold-light); }
 
-        .controls { display: flex; align-items: center; gap: 15px; }
-        .btn-p { background: var(--gold); color: #000; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; }
+        /* Inputs */
+        input, textarea {
+            width: 100%; padding: 14px; margin-bottom: 10px;
+            background: rgba(0,0,0,0.5); border: 1px solid var(--border);
+            color: var(--text); font-family: 'Montserrat', sans-serif;
+            font-size: 12px; text-align: center; transition: all 0.3s;
+        }
+        input:focus, textarea:focus { outline:none; border-color: var(--gold); }
+        textarea { resize: vertical; min-height: 70px; text-align: left; }
 
-        /* Nav */
-        .nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: #050510; border-top: 1px solid var(--gold); display: flex; justify-content: space-around; padding: 15px; }
-        .nav-btn { background: none; border: none; color: #555; display: flex; flex-direction: column; align-items: center; font-size: 10px; gap: 5px; }
-        .nav-btn.active { color: var(--gold); }
-        .nav-btn i { font-size: 20px; }
+        /* Labels */
+        .label { font-size: 9px; text-transform: uppercase; letter-spacing: 3px; color: var(--text2); margin-bottom: 4px; display: block; }
 
-        /* Auth */
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .overlay.active { display: flex; }
-        .auth-box { background: #0f0f1f; border: 2px solid var(--gold); padding: 30px; border-radius: 30px; width: 85%; text-align: center; }
-        input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--gold); background: #000; color: #fff; text-align: center; }
-        .btn-gold { width: 100%; padding: 12px; background: var(--gold); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        /* Badge */
+        .badge {
+            display: inline-block; padding: 4px 10px; border: 1px solid var(--gold);
+            font-size: 8px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold-light);
+        }
+        .badge-red { border-color: var(--red); color: var(--red); }
+
+        /* Chat */
+        .chat-messages { max-height: 320px; overflow-y: auto; margin-bottom: 12px; }
+        .chat-msg { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 11px; line-height: 1.5; }
+        .chat-author { font-weight: 700; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+        .chat-time { font-size: 8px; color: var(--text2); margin-left: 8px; }
+
+        /* News */
+        .news-item { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .news-title { font-weight: 700; color: var(--gold-light); font-size: 12px; letter-spacing: 1px; }
+        .news-text { font-size: 10px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
+        .news-date { font-size: 8px; color: var(--text2); }
+
+        /* Player */
+        .player-bar {
+            position: fixed; bottom: 70px; left: 10px; right: 10px; max-width: 480px; margin: 0 auto;
+            background: rgba(8,8,20,0.98); border: 2px solid var(--gold);
+            padding: 14px 18px; z-index: 1000;
+            display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 0 40px rgba(201,168,76,0.15);
+            backdrop-filter: blur(15px);
+        }
+        .player-btn {
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 1px solid var(--gold); background: transparent;
+            color: var(--gold-light); cursor: pointer; font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s;
+        }
+        .player-btn:hover { background: var(--gold); color: #000; }
+        .player-btn.play { width: 44px; height: 44px; background: var(--gold); color: #000; font-size: 16px; }
+        .player-info { flex:1; min-width:0; }
+        .player-title { font-size: 12px; font-weight: 700; color: var(--gold-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .player-artist { font-size: 9px; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
+        .player-volume { width: 50px; accent-color: var(--gold); }
+
+        /* Navigation */
+        .nav-bar {
+            position: fixed; bottom: 0; width: 100%; max-width: 500px;
+            background: rgba(8,8,20,0.98); border-top: 2px solid var(--gold);
+            display: flex; justify-content: space-around; padding: 10px 0;
+            backdrop-filter: blur(15px);
+        }
+        .nav-link {
+            background: none; border: none; color: var(--text2);
+            font-family: 'Montserrat', sans-serif; font-size: 9px;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 2px;
+            cursor: pointer; padding: 8px 12px; transition: all 0.3s;
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+        }
+        .nav-link.active { color: var(--gold-light); }
+        .nav-link-line {
+            width: 20px; height: 2px; background: transparent; transition: all 0.3s;
+        }
+        .nav-link.active .nav-link-line { background: var(--gold); }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed; inset:0; background: rgba(0,0,0,0.9);
+            z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: var(--surface); border: 2px solid var(--gold);
+            padding: 32px 24px; width: 100%; max-width: 360px; text-align: center;
+        }
+        .modal-title {
+            font-family: 'Playfair Display', serif; font-size: 24px; color: var(--gold-light);
+            margin-bottom: 20px; letter-spacing: 3px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            padding: 12px 24px; border: 1px solid var(--gold); background: rgba(12,12,28,0.98);
+            color: var(--gold-light); font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+            z-index: 3000; animation: fadeIn 0.3s ease;
+        }
+
+        /* Admin */
+        .user-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 11px; flex-wrap: wrap; gap: 6px;
+        }
+        select.admin-select {
+            background: #000; border: 1px solid var(--border); color: var(--text);
+            padding: 4px 8px; font-size: 9px; letter-spacing: 1px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: var(--gold-dark); }
+
+        /* Color input */
+        input[type="color"] {
+            width: 100%; height: 36px; border: 1px solid var(--border);
+            background: transparent; cursor: pointer; padding: 2px;
+        }
     </style>
 </head>
 <body>
@@ -92,137 +237,417 @@
 <div class="snow"></div>
 
 <div class="app">
+    <!-- Header -->
     <header class="header">
-        <div class="logo">SANTA <span>GOLD</span></div>
-        <div id="u-ava" onclick="nav('profile')"></div>
+        <div class="logo-main" onclick="showPage('home')">SANTA<span>WORKSHOP</span></div>
+        <div class="user-icon" id="user-block" onclick="showPage('profile')" title="Профиль">S</div>
     </header>
 
+    <!-- Content -->
     <div class="content">
-        <!-- Home -->
-        <div class="page active" id="home">
-            <div class="card" style="text-align:center; background: linear-gradient(to bottom, rgba(212,168,67,0.1), transparent);">
-                <div id="countdown" style="font-size: 60px; font-weight: 900; color: var(--gold);">0</div>
-                <div style="letter-spacing: 5px; font-size: 12px;">ДНЕЙ ДО ПРАЗДНИКА</div>
+        <!-- HOME -->
+        <div class="page active" id="page-home">
+            <div class="countdown-block">
+                <div class="countdown-number" id="ny-count">0</div>
+                <div class="countdown-label">Дней до Нового Года</div>
             </div>
-            <div class="card">
-                <h3 style="color:var(--gold); margin-bottom:10px;"><i class="fa-solid fa-snowflake"></i> Последние сводки</h3>
+            <div class="card card-gold">
+                <h3 style="font-family:'Playfair Display',serif;color:var(--gold-light);margin-bottom:12px;letter-spacing:2px;">СВОДКИ МАСТЕРСКОЙ</h3>
                 <div id="news-list"></div>
             </div>
         </div>
 
-        <!-- Chat -->
-        <div class="page" id="chat">
-            <div class="card" style="height: 450px; display: flex; flex-direction: column;">
-                <div id="msg-box" style="flex:1; overflow-y:auto; margin-bottom:15px;"></div>
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="m-in" placeholder="Ваше сообщение...">
-                    <button onclick="send()" class="btn-p"><i class="fa-solid fa-paper-plane"></i></button>
+        <!-- CHAT -->
+        <div class="page" id="page-chat">
+            <div class="card card-gold">
+                <h3 style="font-family:'Playfair Display',serif;color:var(--gold-light);margin-bottom:12px;letter-spacing:2px;">ОБЩИЙ ЧАТ</h3>
+                <div class="chat-messages" id="chat-box"></div>
+                <form onsubmit="sendMessage(event)" style="display:flex;gap:8px;">
+                    <input type="text" id="chat-input" placeholder="Сообщение..." style="flex:1;margin:0;text-align:left;">
+                    <button type="submit" class="btn btn-fill" style="width:auto;padding:12px 20px;">→</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- FORUM -->
+        <div class="page" id="page-forum">
+            <div class="card card-gold">
+                <h3 style="font-family:'Playfair Display',serif;color:var(--gold-light);margin-bottom:12px;letter-spacing:2px;">ФОРУМ</h3>
+                <form onsubmit="createTopic(event)" style="display:flex;gap:8px;margin-bottom:12px;">
+                    <input type="text" id="topic-input" placeholder="Название темы..." style="flex:1;margin:0;text-align:left;">
+                    <button type="submit" class="btn btn-fill" style="width:auto;padding:12px 20px;">+</button>
+                </form>
+                <div id="forum-list"></div>
+            </div>
+        </div>
+
+        <!-- RULES -->
+        <div class="page" id="page-rules">
+            <div class="card" style="background:linear-gradient(180deg,rgba(139,105,20,0.15) 0%,rgba(12,12,28,0.95) 100%);border:2px solid var(--gold);">
+                <h3 style="font-family:'Playfair Display',serif;color:var(--gold-light);text-align:center;letter-spacing:3px;margin-bottom:20px;">КОДЕКС МАСТЕРСКОЙ</h3>
+                <div style="font-size:11px;line-height:2;color:var(--text2);">
+                    <p><b style="color:var(--gold-light);">I. УВАЖЕНИЕ.</b> Каждый участник заслуживает уважения. Оскорбления недопустимы.</p>
+                    <p><b style="color:var(--gold-light);">II. ЧИСТОТА.</b> Спам, флуд и реклама запрещены.</p>
+                    <p><b style="color:var(--gold-light);">III. ТАЙНА.</b> Всё, что происходит в Мастерской, остаётся в Мастерской.</p>
+                    <p><b style="color:var(--gold-light);">IV. ВЛАСТЬ.</b> Слово Директора — закон. Решения окончательны.</p>
+                    <p><b style="color:var(--gold-light);">V. ОТВЕТСТВЕННОСТЬ.</b> Три предупреждения ведут к блокировке.</p>
+                    <p><b style="color:var(--gold-light);">VI. ДОБРОТА.</b> Помогайте новичкам. Созидайте.</p>
                 </div>
+                <div style="text-align:right;margin-top:20px;font-family:'Playfair Display',serif;font-size:18px;color:var(--gold-light);letter-spacing:2px;">SANTA CLAUS</div>
+                <div style="text-align:right;font-size:8px;color:var(--text2);letter-spacing:3px;text-transform:uppercase;">Подписано лично</div>
             </div>
         </div>
 
-        <!-- Profile -->
-        <div class="page" id="profile">
-            <div class="card" id="profile-card" style="text-align:center;">
-                <p>Требуется авторизация</p>
+        <!-- ADMIN -->
+        <div class="page" id="page-admin">
+            <div class="card card-gold">
+                <h3 style="font-family:'Playfair Display',serif;color:var(--gold-light);margin-bottom:12px;letter-spacing:2px;">ПАНЕЛЬ УПРАВЛЕНИЯ</h3>
+                <div style="margin-bottom:16px;">
+                    <span class="label">Заголовок новости</span>
+                    <input type="text" id="news-title" placeholder="Заголовок">
+                    <span class="label">Текст новости</span>
+                    <textarea id="news-text" placeholder="Текст..."></textarea>
+                    <button class="btn btn-fill" onclick="addNews()">ОПУБЛИКОВАТЬ</button>
+                </div>
+                <span class="label">Пользователи</span>
+                <div id="admin-users"></div>
+            </div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="page" id="page-profile">
+            <div class="card card-gold" style="text-align:center;">
+                <img id="prof-avatar" src="" style="width:80px;height:80px;border-radius:50%;border:2px solid var(--gold);margin-bottom:12px;">
+                <div id="prof-badge"></div>
+                <h3 id="prof-name" style="font-family:'Playfair Display',serif;color:var(--gold-light);letter-spacing:2px;margin-top:6px;"></h3>
+                <p id="prof-status" style="font-size:10px;color:var(--text2);letter-spacing:1px;"></p>
+            </div>
+            <div class="card">
+                <h3 style="font-family:'Playfair Display',serif;color:var(--gold-light);letter-spacing:2px;margin-bottom:14px;">РЕДАКТОР ПРОФИЛЯ</h3>
+                <form onsubmit="saveProfile(event)">
+                    <span class="label">Имя</span>
+                    <input type="text" id="edit-name">
+                    <span class="label">Статус</span>
+                    <input type="text" id="edit-status">
+                    <span class="label">Аватар (URL)</span>
+                    <input type="text" id="edit-avatar">
+                    <span class="label">Цвет имени</span>
+                    <input type="color" id="edit-color" value="#c9a84c">
+                    <span class="label">Новый пароль</span>
+                    <input type="password" id="edit-pass" placeholder="Оставьте пустым">
+                    <button type="submit" class="btn btn-fill" style="margin-top:8px;">СОХРАНИТЬ</button>
+                </form>
+                <button class="btn btn-red" style="margin-top:8px;" onclick="logout()">ВЫЙТИ</button>
             </div>
         </div>
     </div>
 
-    <!-- Player -->
-    <div class="retro-player">
-        <div class="vinyl-box"><div class="vinyl" id="v-rot"></div></div>
+    <!-- Music Player -->
+    <div class="player-bar">
+        <button class="player-btn" onclick="prevTrack()">◀</button>
+        <button class="player-btn play" id="play-btn" onclick="togglePlay()">▶</button>
+        <button class="player-btn" onclick="nextTrack()">▶▶</button>
         <div class="player-info">
-            <div class="track-title" id="t-title">Classic Jingle</div>
-            <div class="track-artist" id="t-art">Loading...</div>
+            <div class="player-title" id="player-title">White Christmas</div>
+            <div class="player-artist" id="player-artist">BING CROSBY</div>
         </div>
-        <div class="controls">
-            <i class="fa-solid fa-step-backward" onclick="change(-1)" style="color:var(--gold)"></i>
-            <button class="btn-p" onclick="toggle()"><i class="fa-solid fa-play" id="p-icon"></i></button>
-            <i class="fa-solid fa-step-forward" onclick="change(1)" style="color:var(--gold)"></i>
-        </div>
+        <input type="range" class="player-volume" id="vol-slider" min="0" max="100" value="25" oninput="setVolume(this.value)">
     </div>
 
-    <nav class="nav">
-        <button class="nav-btn active" onclick="nav('home')"><i class="fa-solid fa-house"></i>Дом</button>
-        <button class="nav-btn" onclick="nav('chat')"><i class="fa-solid fa-comment"></i>Чат</button>
-        <button class="nav-btn" onclick="nav('profile')"><i class="fa-solid fa-user"></i>Профиль</button>
+    <!-- Bottom Navigation -->
+    <nav class="nav-bar">
+        <button class="nav-link active" onclick="showPage('home')">ГЛАВНАЯ<span class="nav-link-line"></span></button>
+        <button class="nav-link" onclick="showPage('chat')">ЧАТ<span class="nav-link-line"></span></button>
+        <button class="nav-link" onclick="showPage('forum')">ФОРУМ<span class="nav-link-line"></span></button>
+        <button class="nav-link" onclick="showPage('rules')">КОДЕКС<span class="nav-link-line"></span></button>
+        <button class="nav-link admin-only" onclick="showPage('admin')">АДМИН<span class="nav-link-line"></span></button>
     </nav>
 </div>
 
-<div class="overlay" id="auth">
-    <div class="auth-box">
-        <h2 style="color:var(--gold); margin-bottom:15px;">ВХОД</h2>
-        <input type="text" id="u-name" placeholder="Логин">
-        <input type="password" id="u-pass" placeholder="Пароль">
-        <button class="btn-gold" onclick="login()">ВОЙТИ</button>
+<!-- Auth Modal -->
+<div class="modal-overlay" id="auth-modal">
+    <div class="modal-box">
+        <div class="modal-title">ВХОД</div>
+        <input type="text" id="auth-login" placeholder="Логин">
+        <input type="password" id="auth-pass" placeholder="Пароль">
+        <button class="btn btn-fill" onclick="doLogin()">ВОЙТИ</button>
+        <button class="btn" style="margin-top:8px;" onclick="showRegister()">РЕГИСТРАЦИЯ</button>
+        <p style="font-size:8px;color:var(--text2);margin-top:8px;letter-spacing:2px;">SANTA / ADMIN</p>
+    </div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal-overlay" id="register-modal">
+    <div class="modal-box">
+        <div class="modal-title">РЕГИСТРАЦИЯ</div>
+        <input type="text" id="reg-login" placeholder="Логин">
+        <input type="password" id="reg-pass" placeholder="Пароль">
+        <input type="text" id="reg-status" placeholder="Статус">
+        <span class="label">Цвет имени</span>
+        <input type="color" id="reg-color" value="#c9a84c">
+        <button class="btn btn-fill" onclick="doRegister()">СОЗДАТЬ</button>
+        <button class="btn" style="margin-top:8px;" onclick="showLogin()">НАЗАД</button>
     </div>
 </div>
 
 <script>
-const PLAYLIST = [
-    { n: "White Christmas", a: "Bing Crosby", s: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-    { n: "Let It Snow!", a: "Dean Martin", s: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-    { n: "Jingle Bells", a: "Frank Sinatra", s: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
-    { n: "Rockin' Around", a: "Brenda Lee", s: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" }
+// ===== DATA =====
+const DB = {
+    get(k, d) { try { return JSON.parse(localStorage.getItem('sw_'+k)) || d; } catch(e) { return d; } },
+    set(k, v) { localStorage.setItem('sw_'+k, JSON.stringify(v)); }
+};
+
+let session = DB.get('session', null);
+let users = DB.get('users', [
+    { id:1, username:'Santa', password:'admin', role:'dev', avatar:'https://i.pravatar.cc/150?u=santa', status:'ДИРЕКТОР', nick_color:'#c9a84c', banned:false, rating:999, level:99 }
+]);
+let messages = DB.get('chat', []);
+let topics = DB.get('topics', []);
+let news = DB.get('news', [
+    { title:'МАСТЕРСКАЯ ОТКРЫТА', text:'Добро пожаловать в Santa Workshop. Система работает в штатном режиме.', date:'15.05.2026' },
+    { title:'ПРАВИЛА', text:'Ознакомьтесь с Кодексом Мастерской. Соблюдение правил обязательно.', date:'15.05.2026' },
+]);
+
+function save() { DB.set('users', users); DB.set('chat', messages); DB.set('topics', topics); DB.set('news', news); if(session) DB.set('session', session); }
+
+// ===== MUSIC =====
+const TRACKS = [
+    { title:'White Christmas', artist:'BING CROSBY', url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+    { title:'Jingle Bells', artist:'FRANK SINATRA', url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+    { title:'Let It Snow', artist:'DEAN MARTIN', url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+    { title:'Silent Night', artist:'NAT KING COLE', url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
+    { title:'Holy Night', artist:'CLASSICAL', url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
 ];
-
 let cur = 0, playing = false, audio = new Audio();
-let session = JSON.parse(localStorage.getItem('santa_session')) || null;
+audio.volume = DB.get('vol', 0.25);
+document.getElementById('vol-slider').value = audio.volume * 100;
 
-function load(i) {
-    const t = PLAYLIST[i];
-    document.getElementById('t-title').innerText = t.n;
-    document.getElementById('t-art').innerText = t.a;
-    audio.src = t.s;
+function loadTrack(i) {
+    cur = i;
+    const t = TRACKS[i];
+    document.getElementById('player-title').innerText = t.title;
+    document.getElementById('player-artist').innerText = t.artist;
+    audio.src = t.url;
+    audio.load();
 }
-
-function toggle() {
-    if(playing) audio.pause(); else audio.play().catch(e => console.log("Init required"));
+function togglePlay() {
+    if (playing) { audio.pause(); document.getElementById('play-btn').innerText = '▶'; }
+    else { audio.play().catch(()=>{}); document.getElementById('play-btn').innerText = '⏸'; }
     playing = !playing;
-    document.getElementById('p-icon').className = playing ? 'fa-solid fa-pause' : 'fa-solid fa-play';
-    document.getElementById('v-rot').classList.toggle('playing', playing);
 }
+function nextTrack() { cur = (cur+1)%TRACKS.length; loadTrack(cur); if(playing) audio.play().catch(()=>{}); }
+function prevTrack() { cur = (cur-1+TRACKS.length)%TRACKS.length; loadTrack(cur); if(playing) audio.play().catch(()=>{}); }
+function setVolume(v) { audio.volume = v/100; DB.set('vol', audio.volume); }
+audio.addEventListener('ended', ()=>{ nextTrack(); if(playing) audio.play().catch(()=>{}); });
+loadTrack(0);
 
-function change(d) {
-    cur = (cur + d + PLAYLIST.length) % PLAYLIST.length;
-    load(cur);
-    if(playing) audio.play();
-}
-
-function nav(id) {
+// ===== NAVIGATION =====
+function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-    if(id === 'profile' && !session) document.getElementById('auth').classList.add('active');
-    update();
+    document.getElementById('page-'+id).classList.add('active');
+    document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+    const navBtn = document.querySelector(`.nav-link[onclick="showPage('${id}')"]`);
+    if (navBtn) navBtn.classList.add('active');
+    if (id === 'home') renderHome();
+    if (id === 'chat') renderChat();
+    if (id === 'forum') renderForum();
+    if (id === 'admin') renderAdmin();
+    if (id === 'profile') renderProfile();
 }
 
-function login() {
-    const u = document.getElementById('u-name').value, p = document.getElementById('u-pass').value;
-    if(u === 'Santa' && p === 'admin') {
-        session = { name: 'Santa', ava: 'https://i.pravatar.cc/100?u=santa' };
-        localStorage.setItem('santa_session', JSON.stringify(session));
-        document.getElementById('auth').classList.remove('active');
-        update();
+// ===== RENDER =====
+function renderHome() {
+    const now = new Date(), ny = new Date(now.getFullYear()+1,0,1);
+    document.getElementById('ny-count').innerText = Math.ceil((ny-now)/86400000);
+    document.getElementById('news-list').innerHTML = news.slice(-5).reverse().map(n =>
+        `<div class="news-item"><div class="news-title">${esc(n.title)}</div><div class="news-text">${esc(n.text)}</div><div class="news-date">${n.date}</div></div>`
+    ).join('') || '<p style="color:var(--text2);font-size:10px;">Новостей нет.</p>';
+    updateUserBlock();
+}
+
+function renderChat() {
+    document.getElementById('chat-box').innerHTML = messages.length === 0
+        ? '<p style="color:var(--text2);text-align:center;padding:30px;">СООБЩЕНИЙ НЕТ</p>'
+        : messages.slice(-30).map(m => `
+            <div class="chat-msg">
+                <span class="badge">${m.role.toUpperCase()}</span>
+                <span class="chat-author" style="color:${m.nick_color||'#c9a84c'};">${esc(m.username)}</span>
+                <span class="chat-time">${m.time}</span>
+                <br>${esc(m.text)}
+            </div>`).join('');
+}
+
+function sendMessage(e) {
+    e.preventDefault();
+    if (!session) return toast('ВОЙДИТЕ');
+    const inp = document.getElementById('chat-input');
+    if (!inp.value.trim()) return;
+    messages.push({
+        username:session.username, role:session.role,
+        nick_color:session.nick_color, avatar:session.avatar,
+        text:inp.value.trim().substring(0,300),
+        time:new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})
+    });
+    if (messages.length > 100) messages = messages.slice(-100);
+    save(); inp.value = ''; renderChat();
+}
+
+function renderForum() {
+    document.getElementById('forum-list').innerHTML = topics.length === 0
+        ? '<p style="color:var(--text2);">ТЕМ НЕТ</p>'
+        : topics.slice().reverse().map(t => `
+            <div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03);">
+                <b style="color:var(--gold-light);font-size:11px;">${esc(t.title)}</b>
+                <div style="font-size:8px;color:var(--text2);">${esc(t.author)} • ${t.date}</div>
+            </div>`).join('');
+}
+
+function createTopic(e) {
+    e.preventDefault();
+    if (!session) return toast('ВОЙДИТЕ');
+    const inp = document.getElementById('topic-input');
+    if (!inp.value.trim()) return;
+    topics.push({ title:inp.value.trim(), author:session.username, date:new Date().toLocaleDateString('ru-RU') });
+    save(); inp.value = ''; renderForum(); toast('ТЕМА СОЗДАНА');
+}
+
+// ===== AUTH =====
+function showLogin() {
+    document.getElementById('register-modal').classList.remove('active');
+    document.getElementById('auth-modal').classList.add('active');
+}
+function showRegister() {
+    document.getElementById('auth-modal').classList.remove('active');
+    document.getElementById('register-modal').classList.add('active');
+}
+function closeModals() {
+    document.getElementById('auth-modal').classList.remove('active');
+    document.getElementById('register-modal').classList.remove('active');
+}
+function doLogin() {
+    const u = document.getElementById('auth-login').value.trim();
+    const p = document.getElementById('auth-pass').value;
+    const user = users.find(x => x.username === u && x.password === p);
+    if (!user) return toast('НЕВЕРНЫЙ ЛОГИН ИЛИ ПАРОЛЬ');
+    if (user.banned) return toast('АККАУНТ ЗАБЛОКИРОВАН');
+    session = user; save(); closeModals();
+    updateUserBlock(); renderHome(); showPage('home');
+    toast('ДОБРО ПОЖАЛОВАТЬ');
+}
+function doRegister() {
+    const u = document.getElementById('reg-login').value.trim();
+    const p = document.getElementById('reg-pass').value;
+    const s = document.getElementById('reg-status').value.trim() || 'ГОСТЬ';
+    const c = document.getElementById('reg-color').value;
+    if (u.length < 3 || p.length < 4) return toast('ЛОГИН ОТ 3, ПАРОЛЬ ОТ 4 СИМВОЛОВ');
+    if (users.find(x => x.username === u)) return toast('ЛОГИН ЗАНЯТ');
+    users.push({
+        id:Date.now(), username:u, password:p, role:'user',
+        avatar:`https://i.pravatar.cc/150?u=${encodeURIComponent(u)}`,
+        status:s, nick_color:c, banned:false, rating:0, level:1
+    });
+    save(); closeModals(); toast('АККАУНТ СОЗДАН'); showLogin();
+}
+function logout() { session = null; DB.set('session', null); updateUserBlock(); renderHome(); showPage('home'); }
+
+function updateUserBlock() {
+    const block = document.getElementById('user-block');
+    if (session) {
+        block.innerHTML = `<img src="${session.avatar}" style="width:40px;height:40px;border-radius:50%;border:2px solid var(--gold);cursor:pointer;object-fit:cover;">`;
+        block.onclick = () => showPage('profile');
+        document.querySelectorAll('.admin-only').forEach(e => e.style.display = (session.role==='dev'||session.role==='admin')?'flex':'none');
+    } else {
+        block.innerHTML = 'S';
+        block.onclick = () => showLogin();
+        document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'none');
     }
 }
 
-function update() {
-    const countdown = Math.ceil((new Date(2027,0,1) - new Date()) / 86400000);
-    document.getElementById('countdown').innerText = countdown;
-    
-    if(session) {
-        document.getElementById('u-ava').innerHTML = `<img src="${session.ava}" style="width:35px; border-radius:50%; border:1px solid var(--gold)">`;
-        document.getElementById('profile-card').innerHTML = `<h3>${session.name}</h3><p style="color:var(--gold)">DIRECTOR</p><br><button onclick="localStorage.clear(); location.reload();" class="btn-gold" style="background:var(--red); color:white">ВЫЙТИ</button>`;
-    }
-    
-    document.getElementById('news-list').innerHTML = `<div style="padding:10px 0; border-bottom:1px solid #222"><small>${new Date().toLocaleDateString()}</small><br><b>Система NEXUS активна.</b> Мониторинг запущен.</div>`;
+// ===== PROFILE =====
+function renderProfile() {
+    if (!session) { showLogin(); return; }
+    document.getElementById('prof-avatar').src = session.avatar;
+    document.getElementById('prof-badge').innerHTML = `<span class="badge">${session.role.toUpperCase()}</span>`;
+    document.getElementById('prof-name').innerText = session.username;
+    document.getElementById('prof-name').style.color = session.nick_color;
+    document.getElementById('prof-status').innerText = session.status;
+    document.getElementById('edit-name').value = session.username;
+    document.getElementById('edit-status').value = session.status;
+    document.getElementById('edit-avatar').value = session.avatar;
+    document.getElementById('edit-color').value = session.nick_color;
 }
 
-audio.addEventListener('ended', () => change(1));
-load(0); update();
+function saveProfile(e) {
+    e.preventDefault();
+    if (!session) return;
+    const name = document.getElementById('edit-name').value.trim();
+    if (name.length < 3) return toast('ИМЯ ОТ 3 СИМВОЛОВ');
+    session.username = name;
+    session.status = document.getElementById('edit-status').value.trim() || session.status;
+    session.avatar = document.getElementById('edit-avatar').value.trim() || session.avatar;
+    session.nick_color = document.getElementById('edit-color').value;
+    const pass = document.getElementById('edit-pass').value;
+    if (pass && pass.length >= 4) session.password = pass;
+    const idx = users.findIndex(u => u.id === session.id);
+    if (idx >= 0) users[idx] = session;
+    save(); renderProfile(); updateUserBlock(); renderHome();
+    toast('ПРОФИЛЬ ОБНОВЛЁН');
+}
+
+// ===== ADMIN =====
+function renderAdmin() {
+    if (!session || (session.role!=='dev'&&session.role!=='admin')) return showPage('home');
+    document.getElementById('admin-users').innerHTML = users.map(u => `
+        <div class="user-row">
+            <span style="color:${u.nick_color};">${esc(u.username)} <span class="badge">${u.role.toUpperCase()}</span></span>
+            ${u.id !== session.id ? `
+                <div style="display:flex;gap:4px;align-items:center;">
+                    <select class="admin-select" onchange="adminAction('role',${u.id},this.value)">
+                        <option value="user" ${u.role==='user'?'selected':''}>USER</option>
+                        <option value="mod" ${u.role==='mod'?'selected':''}>MOD</option>
+                        <option value="admin" ${u.role==='admin'?'selected':''}>ADMIN</option>
+                    </select>
+                    <button class="btn" style="padding:4px 8px;font-size:8px;width:auto;" onclick="adminAction('ban',${u.id})">${u.banned?'РАЗБАН':'БАН'}</button>
+                </div>
+            ` : '<span style="font-size:8px;color:var(--gold-light);">ВЫ</span>'}
+        </div>
+    `).join('');
+}
+
+function adminAction(action, id, value) {
+    const u = users.find(u => u.id === id);
+    if (!u) return;
+    if (action === 'role') u.role = value;
+    if (action === 'ban') u.banned = !u.banned;
+    save(); renderAdmin(); renderHome();
+}
+
+function addNews() {
+    const t = document.getElementById('news-title').value.trim();
+    const x = document.getElementById('news-text').value.trim();
+    if (!t || !x) return;
+    news.push({ title:t, text:x, date:new Date().toLocaleDateString('ru-RU') });
+    save();
+    document.getElementById('news-title').value = '';
+    document.getElementById('news-text').value = '';
+    renderHome();
+    toast('НОВОСТЬ ОПУБЛИКОВАНА');
+}
+
+// ===== HELPERS =====
+function toast(msg) {
+    const old = document.querySelector('.toast');
+    if (old) old.remove();
+    const t = document.createElement('div');
+    t.className = 'toast'; t.innerText = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2500);
+}
+function esc(s) { const d = document.createElement('div'); d.appendChild(document.createTextNode(s)); return d.innerHTML; }
+
+// ===== INIT =====
+updateUserBlock(); renderHome();
 </script>
+
 </body>
 </html>
