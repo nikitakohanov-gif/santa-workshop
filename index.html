@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SANTA OS | PRO EDITION</title>
+    <title>SANTA WORKSHOP | MEGA HOLIDAY</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Marck+Script&display=swap" rel="stylesheet">
     <style>
         :root {
-            --red: #d42426; --green: #165b33; --gold: #f8b229; --dark: #0a0c10;
-            --surface: rgba(255, 255, 255, 0.05); --border: rgba(255, 255, 255, 0.1);
-            --transition: cubic-bezier(0.4, 0, 0.2, 1);
+            --red: #d42426; --green: #165b33; --gold: #f8b229; --dark: #07090c;
+            --surface: rgba(255, 255, 255, 0.08); --border: rgba(255, 255, 255, 0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
@@ -17,246 +16,216 @@
 
         canvas#snow { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
 
-        /* AUTH MODAL */
+        /* --- ГИРЛЯНДЫ НА ШАПКЕ --- */
+        .lights {
+            position: fixed; top: 0; left: 0; width: 100%; height: 20px;
+            background: url('https://www.transparenttextures.com/patterns/black-linen.png'); /* заглушка под текстуру */
+            z-index: 2100; display: flex; justify-content: space-around; pointer-events: none;
+        }
+        .light {
+            width: 12px; height: 18px; border-radius: 50%;
+            position: relative; top: -5px;
+            animation: glow 1.5s infinite alternate;
+        }
+        .light:nth-child(4n+1) { background: #ff2424; box-shadow: 0 0 15px #ff2424; animation-delay: 0s; }
+        .light:nth-child(4n+2) { background: #24ff24; box-shadow: 0 0 15px #24ff24; animation-delay: 0.4s; }
+        .light:nth-child(4n+3) { background: #2424ff; box-shadow: 0 0 15px #2424ff; animation-delay: 0.8s; }
+        .light:nth-child(4n+4) { background: #ffff24; box-shadow: 0 0 15px #ffff24; animation-delay: 1.2s; }
+
+        @keyframes glow { from { opacity: 0.4; filter: brightness(0.8); } to { opacity: 1; filter: brightness(1.3); } }
+
+        /* --- АВТОРИЗАЦИЯ --- */
         #auth-overlay {
             position: fixed; inset: 0; background: radial-gradient(circle, #1a472a 0%, #05070a 100%);
-            z-index: 2000; display: flex; align-items: center; justify-content: center; transition: 0.5s;
+            z-index: 3000; display: flex; align-items: center; justify-content: center; transition: 0.8s;
         }
         .auth-card {
-            background: rgba(255, 255, 255, 0.07); backdrop-filter: blur(20px);
-            padding: 50px; border-radius: 30px; border: 1px solid var(--border);
-            width: 400px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px);
+            padding: 40px; border-radius: 30px; border: 1px solid var(--border);
+            width: 420px; text-align: center; box-shadow: 0 40px 80px rgba(0,0,0,0.7);
         }
-        .auth-card h1 { font-family: 'Marck Script', cursive; font-size: 48px; color: var(--gold); margin-bottom: 10px; }
+        .auth-card h1 { font-family: 'Marck Script', cursive; font-size: 42px; color: var(--gold); margin-bottom: 20px; }
         .auth-card input {
-            width: 100%; padding: 15px; margin: 10px 0; background: rgba(0,0,0,0.3);
+            width: 100%; padding: 15px; margin: 10px 0; background: rgba(0,0,0,0.5);
             border: 1px solid var(--border); border-radius: 12px; color: #fff; outline: none;
         }
-        .auth-card button {
-            width: 100%; padding: 15px; margin-top: 20px; background: var(--red);
-            border: none; border-radius: 12px; color: white; font-weight: 800; cursor: pointer;
-            transition: 0.3s;
+        .btn-main {
+            width: 100%; padding: 15px; background: var(--red); border: none; border-radius: 12px;
+            color: #fff; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px;
         }
-        .auth-card button:hover { background: #ff2e31; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 36, 38, 0.4); }
+        .btn-main:hover { background: #f00; transform: scale(1.02); }
 
-        /* MAIN LAYOUT */
-        .layout { display: flex; height: 100vh; }
+        /* --- ОСНОВНОЙ ИНТЕРФЕЙС --- */
+        .layout { display: flex; height: 100vh; padding-top: 20px; }
 
-        /* SIDEBAR (Drawer) */
+        /* БОКОВАЯ ПАНЕЛЬ С ЧАТОМ */
         .sidebar {
-            width: 280px; background: rgba(0,0,0,0.6); backdrop-filter: blur(15px);
+            width: 320px; background: rgba(0,0,0,0.7); backdrop-filter: blur(15px);
             border-right: 1px solid var(--border); display: flex; flex-direction: column;
-            transition: var(--transition) 0.3s; z-index: 1500;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 2000;
         }
         .sidebar.collapsed { width: 80px; }
-        .sidebar-header { padding: 30px 20px; display: flex; align-items: center; justify-content: space-between; }
-        .menu-toggle { cursor: pointer; color: var(--gold); font-size: 24px; }
+        .sidebar.collapsed .chat-area, .sidebar.collapsed span, .sidebar.collapsed .logo-text { display: none; }
 
-        .nav-list { flex: 1; padding: 10px; list-style: none; overflow-x: hidden; }
+        .nav-list { padding: 15px; flex: 0; }
         .nav-item {
-            display: flex; align-items: center; padding: 15px; margin-bottom: 5px;
-            border-radius: 12px; cursor: pointer; transition: 0.2s; color: rgba(255,255,255,0.7);
-            white-space: nowrap;
+            display: flex; align-items: center; padding: 12px 15px; border-radius: 12px;
+            cursor: pointer; margin-bottom: 5px; color: #ccc; transition: 0.2s;
         }
         .nav-item:hover, .nav-item.active { background: var(--surface); color: var(--gold); }
-        .nav-item i { min-width: 40px; font-size: 20px; text-align: center; }
+        .nav-item i { min-width: 35px; font-size: 18px; }
 
-        /* CONTENT AREA */
+        /* ИНТЕГРИРОВАННЫЙ ЧАТ */
+        .chat-area {
+            flex: 1; display: flex; flex-direction: column; border-top: 1px solid var(--border);
+            margin-top: 20px; background: rgba(0,0,0,0.2);
+        }
+        .chat-title { padding: 15px; font-size: 12px; font-weight: bold; color: var(--gold); letter-spacing: 1px; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; font-size: 13px; }
+        .chat-msg { margin-bottom: 10px; padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 8px; }
+        .chat-msg b { color: var(--gold); display: block; font-size: 10px; }
+        .chat-input-box { padding: 10px; border-top: 1px solid var(--border); display: flex; gap: 5px; }
+        .chat-input-box input { flex: 1; background: transparent; border: none; color: white; font-size: 12px; outline: none; }
+
+        /* КОНТЕНТ */
         .main-content { flex: 1; padding: 40px; overflow-y: auto; position: relative; }
-        .glass-panel {
-            background: var(--surface); border: 1px solid var(--border);
-            padding: 30px; border-radius: 20px; margin-bottom: 25px;
+        
+        /* ЕЛКА ВНИЗУ */
+        .footer-decor {
+            position: fixed; bottom: -10px; right: 20px; pointer-events: none; z-index: 1500;
+            filter: drop-shadow(0 0 20px rgba(22, 91, 51, 0.5));
         }
 
-        /* ADMIN PANEL TABLE */
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .admin-table th { text-align: left; padding: 12px; border-bottom: 2px solid var(--border); color: var(--gold); }
-        .admin-table td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; }
-        .badge-online { background: var(--green); }
-
-        /* GRID SYSTEM */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .stat-card { text-align: center; border-bottom: 4px solid var(--gold); }
-        .stat-card h3 { font-size: 32px; margin: 10px 0; }
-
+        .glass-panel { background: var(--surface); border: 1px solid var(--border); padding: 30px; border-radius: 25px; }
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
+<div class="lights" id="lights"></div>
 <canvas id="snow"></canvas>
 
-<!-- AUTHENTICATION -->
+<!-- ОКНО ВХОДА -->
 <div id="auth-overlay">
     <div class="auth-card">
-        <p style="letter-spacing: 3px; font-size: 10px; opacity: 0.7;">NORTH POLE SECURE ACCESS</p>
-        <h1>Welcome Back</h1>
-        <div id="login-form">
-            <input type="text" id="username" placeholder="Santa ID">
-            <input type="password" id="password" placeholder="Passkey">
-            <button onclick="login()">ENTER MASTER WORKSHOP</button>
-        </div>
+        <h1>Санта OS</h1>
+        <p style="font-size: 12px; margin-bottom: 20px; opacity: 0.7;">Добро пожаловать в Мастерскую</p>
+        <input type="text" id="u" placeholder="Логин (admin)">
+        <input type="password" id="p" placeholder="Пароль (santa2027)">
+        <button class="btn-main" onclick="auth()">ВОЙТИ В СИСТЕМУ</button>
+        <p style="margin-top: 15px; font-size: 11px;">Нет аккаунта? <span style="color:var(--gold); cursor:pointer">Создать</span></p>
     </div>
 </div>
 
-<!-- MAIN APP -->
-<div class="layout hidden" id="app-layout">
+<!-- ОСНОВНОЙ ИНТЕРФЕЙС -->
+<div class="layout hidden" id="app">
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div id="logo-text" style="font-family: 'Marck Script', cursive; font-size: 24px; color: var(--gold);">SantaOS</div>
-            <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+        <div style="padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+            <div class="logo-text" style="font-family: 'Marck Script'; color: var(--gold); font-size: 22px;">Workshop</div>
+            <div style="cursor:pointer; color: var(--gold);" onclick="toggleSide()">☰</div>
         </div>
-        
-        <ul class="nav-list">
-            <li class="nav-item active" onclick="navigate('main')"><i>🏠</i><span>Главная</span></li>
-            <li class="nav-item" onclick="navigate('friends')"><i>👥</i><span>Друзья</span></li>
-            <li class="nav-item" onclick="navigate('search')"><i>🔍</i><span>Поиск</span></li>
-            <li class="nav-item" onclick="navigate('requests')"><i>📩</i><span>Запросы</span></li>
-            <li class="nav-item" onclick="navigate('messages')"><i>💬</i><span>Сообщения</span></li>
-            <li class="nav-item" onclick="navigate('admin')"><i>⚡</i><span>Панель админа</span></li>
-            <li class="nav-item" onclick="navigate('support')"><i>🛠</i><span>Тех поддержка</span></li>
-            <li class="nav-item" onclick="navigate('profile')"><i>👤</i><span>Профиль</span></li>
-            <li class="nav-item" style="margin-top: 50px; color: var(--red);" onclick="logout()"><i>🚪</i><span>Выход</span></li>
-        </ul>
+
+        <nav class="nav-list">
+            <div class="nav-item active" onclick="nav('home')"><i>🏠</i><span>Главная</span></div>
+            <div class="nav-item" onclick="nav('admin')"><i>⚡</i><span>Админка</span></div>
+            <div class="nav-item" onclick="nav('profile')"><i>👤</i><span>Профиль</span></div>
+            <div class="nav-item" onclick="nav('support')"><i>🛠</i><span>Поддержка</span></div>
+            <div class="nav-item" style="color: var(--red)" onclick="location.reload()"><i>🚪</i><span>Выход</span></div>
+        </nav>
+
+        <!-- ПЕРЕНЕСЕННЫЙ ЧАТ -->
+        <div class="chat-area">
+            <div class="chat-title">ЧАТ ЭЛЬФОВ ❄️</div>
+            <div class="chat-messages" id="msgs">
+                <div class="chat-msg"><b>Бернард:</b> Подарки на конвейере!</div>
+                <div class="chat-msg"><b>Система:</b> Олени готовы к вылету.</div>
+            </div>
+            <div class="chat-input-box">
+                <input type="text" id="msgIn" placeholder="Сообщение...">
+                <button onclick="sendMsg()" style="background:none; border:none; color:var(--gold); cursor:pointer;">➔</button>
+            </div>
+        </div>
     </aside>
 
-    <main class="main-content" id="content-area">
-        <!-- Content injected here -->
+    <main class="main-content" id="view">
+        <!-- Контент -->
     </main>
 </div>
 
+<!-- ЕЛКА -->
+<div class="footer-decor">
+    <img src="https://img.icons8.com/color/240/christmas-tree.png" alt="Елка">
+</div>
+
 <script>
-    // NAVIGATION LOGIC
-    const PAGES = {
-        main: `
-            <h1>Главная Консоль</h1>
-            <div class="grid">
-                <div class="glass-panel stat-card">
-                    <p>Подарков готово</p>
-                    <h3>1,240,500</h3>
-                </div>
-                <div class="glass-panel stat-card">
-                    <p>Хороших детей</p>
-                    <h3>89%</h3>
-                </div>
-                <div class="glass-panel stat-card">
-                    <p>Запас угля</p>
-                    <h3>Низкий!</h3>
-                </div>
-            </div>
-        `,
-        admin: `
-            <h1>Админ-панель: Управление Центром</h1>
-            <div class="glass-panel">
-                <h3>Системные показатели</h3>
-                <div class="grid" style="margin-top:20px;">
-                    <div>CPU: 12%</div><div>Memory: 4.2GB / 16GB</div><div>Uptime: 242 дня</div>
-                </div>
-            </div>
-            <div class="glass-panel">
-                <h3>Список активных Эльфов</h3>
-                <table class="admin-table">
-                    <tr><th>Имя</th><th>Роль</th><th>Статус</th><th>Действие</th></tr>
-                    <tr><td>Бернард</td><td>Техник</td><td><span class="badge badge-online">ONLINE</span></td><td><button>LOGS</button></td></tr>
-                    <tr><td>Альбастр</td><td>Упаковщик</td><td><span class="badge badge-online">ONLINE</span></td><td><button>LOGS</button></td></tr>
-                    <tr><td>Бушди</td><td>Логистика</td><td><span class="badge">OFFLINE</span></td><td><button>LOGS</button></td></tr>
-                </table>
-            </div>
-        `,
-        friends: `
-            <h1>Друзья и Коллеги</h1>
-            <div class="grid">
-                <div class="glass-panel">👤 Зубная Фея (Online)</div>
-                <div class="glass-panel">👤 Пасхальный Кролик (Away)</div>
-                <div class="glass-panel">👤 Джек Фрост (Busy)</div>
-            </div>
-        `,
-        profile: `
-            <h1>Профиль Санты</h1>
-            <div class="glass-panel">
-                <p><strong>Ранг:</strong> Верховный Хранитель Праздника</p>
-                <p><strong>Почта:</strong> santa@northpole.com</p>
-                <button style="margin-top:20px; padding:10px;">Сменить пароль</button>
-            </div>
-        `,
-        support: `
-            <h1>Техническая поддержка</h1>
-            <div class="glass-panel">
-                <textarea placeholder="Опишите проблему..." style="width:100%; height:100px; background:rgba(0,0,0,0.3); border:1px solid var(--border); color:#fff; padding:10px; border-radius:10px;"></textarea>
-                <button style="margin-top:10px; padding:10px 20px; background:var(--green); border:none; color:white; border-radius:5px;">Отправить тикет</button>
-            </div>
-        `,
-        search: `<h1>Глобальный поиск</h1><input type="text" placeholder="Поиск по детям, эльфам или подаркам..." style="width:100%; padding:15px; border-radius:15px; background:var(--surface); border:1px solid var(--gold); color:white;">`,
-        requests: `<h1>Запросы в друзья</h1><div class="glass-panel">Запросов пока нет. Все хотят быть твоими друзьями, Санта!</div>`,
-        messages: `<h1>Центр сообщений</h1><div class="glass-panel">📩 Входящие (0)<br>📤 Исходящие (12)</div>`
-    };
-
-    function toggleSidebar() {
-        const sb = document.getElementById('sidebar');
-        const logo = document.getElementById('logo-text');
-        sb.classList.toggle('collapsed');
-        logo.classList.toggle('hidden');
+    // Создаем гирлянду динамически
+    const lightsCont = document.getElementById('lights');
+    for(let i=0; i<40; i++) {
+        const l = document.createElement('div');
+        l.className = 'light';
+        lightsCont.appendChild(l);
     }
 
-    function navigate(page) {
-        document.getElementById('content-area').innerHTML = PAGES[page] || `<h1>${page}</h1>`;
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.toggle('active', item.getAttribute('onclick').includes(`'${page}'`));
-        });
-    }
-
-    function login() {
-        const u = document.getElementById('username').value;
-        const p = document.getElementById('password').value;
-        
-        if(u === 'Santa' && p === '2027') {
+    function auth() {
+        const user = document.getElementById('u').value;
+        const pass = document.getElementById('p').value;
+        if(user === 'admin' && pass === 'santa2027') {
             document.getElementById('auth-overlay').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('auth-overlay').classList.add('hidden');
-                document.getElementById('app-layout').classList.remove('hidden');
-                navigate('main');
-            }, 500);
-        } else {
-            alert('Неверные учетные данные. Попробуйте Santa / 2027');
-        }
+                document.getElementById('app').classList.remove('hidden');
+                nav('home');
+            }, 600);
+        } else { alert('Доступ запрещен!'); }
     }
 
-    function logout() {
-        location.reload();
+    function toggleSide() {
+        document.getElementById('sidebar').classList.toggle('collapsed');
     }
 
-    // SNOW SCRIPT
+    function nav(p) {
+        const v = document.getElementById('view');
+        const pages = {
+            home: `<h1>Главный пульт</h1><div class="glass-panel"><h3>С возвращением, Санта!</h3><p>Сегодня на фабрике произведено 12,400 игрушек.</p></div>`,
+            admin: `<h1>Панель администратора</h1><div class="glass-panel">Статистика узлов: OK<br>Загрузка магии: 94%</div>`,
+            profile: `<h1>Ваш профиль</h1><div class="glass-panel">Логин: admin<br>Доступ: Разработчик</div>`,
+            support: `<h1>Техподдержка</h1><div class="glass-panel"><p>Опишите проблему эльфам-техникам.</p></div>`
+        };
+        v.innerHTML = pages[p];
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    }
+
+    function sendMsg() {
+        const i = document.getElementById('msgIn');
+        if(!i.value) return;
+        const m = document.getElementById('msgs');
+        m.innerHTML += `<div class="chat-msg"><b>Вы:</b> ${i.value}</div>`;
+        i.value = '';
+        m.scrollTop = m.scrollHeight;
+    }
+
+    // СНЕГ
     const canvas = document.getElementById('snow');
     const ctx = canvas.getContext('2d');
     let w, h, flakes = [];
-
-    function initSnow() {
+    function init() {
         w = canvas.width = window.innerWidth;
         h = canvas.height = window.innerHeight;
-        flakes = Array(150).fill().map(() => ({
-            x: Math.random() * w, y: Math.random() * h,
-            r: Math.random() * 3 + 1, d: Math.random() * 1
-        }));
+        flakes = Array(120).fill().map(() => ({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 3 + 1 }));
     }
-
-    function drawSnow() {
+    function draw() {
         ctx.clearRect(0, 0, w, h);
-        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+        ctx.fillStyle = "white";
         ctx.beginPath();
         flakes.forEach(f => {
-            ctx.moveTo(f.x, f.y);
-            ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-            f.y += Math.cos(f.d) + 1 + f.r / 2;
-            if (f.y > h) { f.y = -10; f.x = Math.random() * w; }
+            ctx.moveTo(f.x, f.y); ctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
+            f.y += 1.2; if(f.y > h) f.y = -10;
         });
         ctx.fill();
-        requestAnimationFrame(drawSnow);
+        requestAnimationFrame(draw);
     }
-
-    window.addEventListener('resize', initSnow);
-    initSnow();
-    drawSnow();
+    window.addEventListener('resize', init);
+    init(); draw();
 </script>
 
 </body>
