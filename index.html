@@ -3,362 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SANTA WORKSHOP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>NEXUS | SANTA WORKSHOP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@200;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a1628; --surface: rgba(18,32,55,0.95); --ice: #c8e6f5; --gold: #d4a843;
-            --red: #c0392b; --text: #e8f0f8; --text2: #8a9bb5; --border: rgba(200,230,245,0.15);
-            --radius: 8px;
+            --bg: #05070a; --surface: rgba(10, 14, 20, 0.8); --gold: #d4a843; --gold-dim: #8b6d2d;
+            --ice: #e0f2f7; --border: rgba(255, 255, 255, 0.05); --text: #ffffff; --text-dim: #667085;
         }
         * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-        body { font-family:'Montserrat',sans-serif; background:var(--bg); color:var(--text); height:100vh; overflow:hidden; }
+        body { font-family:'Inter', sans-serif; background:var(--bg); color:var(--text); height:100vh; overflow:hidden; }
 
-        .app { display:flex; height:100vh; max-width:900px; margin:0 auto; }
+        .app { display:flex; height:100vh; position:relative; }
 
-        /* SIDEBAR */
+        /* SIDEBAR: CLEAN MINIMALISM */
         .sidebar {
-            width:200px; background:rgba(12,24,42,0.98); border-right:1px solid var(--border);
-            display:flex; flex-direction:column; padding:16px 0; flex-shrink:0;
+            width:240px; background:#000; border-right:1px solid var(--border);
+            display:flex; flex-direction:column; padding:30px 0; z-index:100;
         }
-        .sidebar-logo {
-            font-family:'Playfair Display',serif; font-size:20px; font-weight:900;
-            letter-spacing:3px; color:var(--ice); text-align:center; padding:0 12px 16px;
-            border-bottom:1px solid var(--border); margin-bottom:8px;
+        .logo {
+            font-family:'Cinzel', serif; font-size:18px; letter-spacing:6px; color:var(--gold);
+            text-align:center; margin-bottom:40px; font-weight:900;
         }
-        .sidebar-logo span { color:var(--gold); }
-        .sidebar-nav { flex:1; overflow-y:auto; padding:0 8px; }
-        .sidebar-link {
-            display:flex; align-items:center; gap:8px; padding:10px 12px; margin-bottom:2px;
-            border-radius:6px; cursor:pointer; font-size:10px; font-weight:600;
-            text-transform:uppercase; letter-spacing:1px; color:var(--text2);
-            transition:all 0.3s; border:none; background:none; width:100%;
-            font-family:'Montserrat',sans-serif; text-align:left;
+        .nav { flex:1; padding:0 20px; }
+        .nav-link {
+            display:block; width:100%; padding:12px 15px; margin-bottom:5px;
+            background:none; border:none; color:var(--text-dim); text-align:left;
+            font-size:11px; text-transform:uppercase; letter-spacing:2px;
+            cursor:pointer; transition: 0.3s; border-radius: 4px;
         }
-        .sidebar-link:hover { background:rgba(200,230,245,0.05); color:var(--ice); }
-        .sidebar-link.active { background:rgba(200,230,245,0.1); color:var(--ice); border-left:2px solid var(--ice); }
-        .sidebar-user {
-            padding:12px; border-top:1px solid var(--border); margin-top:8px;
-            display:flex; align-items:center; gap:8px; cursor:pointer;
-        }
-        .sidebar-user img { width:32px; height:32px; border-radius:50%; border:2px solid var(--ice); object-fit:cover; }
-        .sidebar-user span { font-size:10px; font-weight:700; }
+        .nav-link:hover { color:var(--gold); background: rgba(212,168,67,0.05); }
+        .nav-link.active { color:var(--text); background: rgba(255,255,255,0.05); border-left: 2px solid var(--gold); }
 
-        /* MAIN */
-        .main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+        /* MAIN CONTENT */
+        .main { flex:1; display:flex; flex-direction:column; background: radial-gradient(circle at center, #0d1117 0%, #05070a 100%); position:relative; }
         .header {
-            padding:14px 20px; background:rgba(15,28,50,0.95); border-bottom:1px solid var(--border);
-            display:flex; align-items:center; justify-content:space-between;
+            padding:20px 40px; border-bottom:1px solid var(--border);
+            display:flex; justify-content:space-between; align-items:center; background: rgba(0,0,0,0.2);
         }
-        .header-title { font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--ice); }
-        .header-stats { display:flex; gap:16px; font-size:9px; color:var(--text2); }
-        .header-stats span { color:var(--ice); font-weight:700; }
+        .header-status { font-size:10px; letter-spacing:1px; color:var(--text-dim); text-transform:uppercase; }
+        .header-status span { color:var(--gold); font-weight:bold; }
 
-        .content { flex:1; overflow-y:auto; padding:16px; }
-        .page { display:none; animation:fadeIn 0.3s ease; }
+        .content { flex:1; overflow-y:auto; padding:40px; }
+        .page { display:none; animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
         .page.active { display:block; }
-        @keyframes fadeIn { from{opacity:0;transform:translateX(8px);} to{opacity:1;transform:translateX(0);} }
+        @keyframes slideUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
 
-        .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px; margin-bottom:8px; }
-        .card-gold { border-color:var(--gold); }
-
-        /* MINI CHAT */
-        .mini-chat {
-            position:fixed; bottom:0; right:0; width:260px;
-            background:rgba(12,24,42,0.98); border-left:1px solid var(--border);
-            border-top:1px solid var(--border); display:flex; flex-direction:column;
-            z-index:50; height:320px; border-radius:12px 0 0 0;
+        /* WELCOME SECTION */
+        .welcome-center {
+            height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;
         }
-        .mini-chat-header {
-            padding:8px 12px; border-bottom:1px solid var(--border);
-            font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1px;
-            color:var(--ice); cursor:pointer;
+        .welcome-title { font-family:'Cinzel', serif; font-size:48px; font-weight:900; margin-bottom:20px; letter-spacing:10px; color:var(--text); }
+        .welcome-subtitle { font-size:14px; color:var(--text-dim); max-width:500px; line-height:1.8; letter-spacing:1px; }
+        .divider { width:60px; height:2px; background:var(--gold); margin:30px 0; }
+
+        /* DATA CARDS */
+        .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:20px; margin-top:30px; }
+        .card { 
+            background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:25px; 
+            transition: 0.3s; position:relative; overflow:hidden;
         }
-        .mini-chat-msgs { flex:1; overflow-y:auto; padding:8px; font-size:8px; }
-        .mini-chat-input { display:flex; padding:6px; border-top:1px solid var(--border); }
-        .mini-chat-input input { flex:1; background:rgba(0,0,0,0.3); border:1px solid var(--border); color:var(--text); padding:6px 8px; font-size:8px; border-radius:4px; font-family:'Montserrat',sans-serif; }
-        .mini-chat-input button { background:var(--ice); border:none; color:#0a1628; padding:6px 10px; border-radius:4px; cursor:pointer; font-weight:700; font-size:8px; margin-left:4px; }
+        .card:hover { border-color: var(--gold-dim); transform: translateY(-5px); }
+        .card-tag { font-size:9px; color:var(--gold); text-transform:uppercase; letter-spacing:2px; margin-bottom:15px; display:block; }
+        .card-title { font-family:'Cinzel', serif; font-size:18px; margin-bottom:10px; color:var(--ice); }
+        .card-text { font-size:13px; color:var(--text-dim); line-height:1.6; }
 
-        /* COUNTDOWN */
-        .countdown-bar {
-            background:linear-gradient(90deg, rgba(200,230,245,0.05), rgba(212,168,67,0.08));
-            border-top:2px solid var(--ice); padding:10px 20px;
-            display:flex; align-items:center; justify-content:center; gap:12px;
-            font-size:10px; letter-spacing:2px; text-transform:uppercase;
+        /* CHAT STYLE */
+        .chat-container { height:500px; display:flex; flex-direction:column; border:1px solid var(--border); background:rgba(0,0,0,0.2); }
+        .chat-msgs { flex:1; overflow-y:auto; padding:20px; }
+        .msg { margin-bottom:20px; }
+        .msg-meta { font-size:10px; color:var(--gold); margin-bottom:5px; text-transform:uppercase; letter-spacing:1px; }
+        .msg-body { font-size:13px; color:var(--text); line-height:1.5; padding-left:10px; border-left:1px solid var(--gold-dim); }
+        .chat-input { padding:20px; display:flex; gap:10px; border-top:1px solid var(--border); }
+        input { 
+            flex:1; background:rgba(255,255,255,0.03); border:1px solid var(--border); 
+            padding:12px 20px; color:#fff; font-size:12px; outline:none; transition: 0.3s;
         }
-        .countdown-num { font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:var(--ice); }
+        input:focus { border-color: var(--gold); }
+        .btn-send { background:var(--gold); color:#000; border:none; padding:0 25px; font-weight:bold; cursor:pointer; text-transform:uppercase; font-size:10px; }
 
-        /* STATS BAR */
-        .stats-bar {
-            background:rgba(15,28,50,0.95); border-top:1px solid var(--border);
-            padding:8px 20px; display:flex; justify-content:center; gap:20px;
-            font-size:8px; color:var(--text2); text-transform:uppercase; letter-spacing:1px;
+        /* FOOTER COUNTER */
+        .footer-bar {
+            padding:15px 40px; border-top:1px solid var(--border); display:flex; justify-content:space-between;
+            font-size:10px; color:var(--text-dim); letter-spacing:1px; background:rgba(0,0,0,0.3);
         }
-        .stats-bar span { color:var(--ice); font-weight:700; }
 
-        /* BUTTONS */
-        .btn { display:inline-block; padding:8px 14px; border:1px solid var(--ice); background:transparent; color:var(--ice); font-family:'Montserrat',sans-serif; font-weight:700; font-size:9px; text-transform:uppercase; letter-spacing:1px; cursor:pointer; transition:all 0.3s; text-align:center; border-radius:6px; }
-        .btn:hover { background:var(--ice); color:#0a1628; }
-        .btn-fill { background:var(--ice); color:#0a1628; }
-        .btn-sm { padding:5px 8px; font-size:7px; width:auto; }
-
-        input,textarea { width:100%; padding:8px 10px; margin-bottom:4px; background:rgba(10,22,40,0.8); border:1px solid var(--border); color:var(--text); font-family:'Montserrat',sans-serif; font-size:9px; border-radius:6px; }
-        input:focus,textarea:focus { outline:none; border-color:var(--ice); }
-        textarea { resize:vertical; min-height:50px; }
-
-        .badge { display:inline-block; padding:2px 5px; border:1px solid var(--ice); font-size:6px; text-transform:uppercase; letter-spacing:1px; color:var(--ice); border-radius:4px; }
-
-        .modal { position:fixed; inset:0; background:rgba(5,12,25,0.95); z-index:2000; display:none; align-items:center; justify-content:center; padding:14px; }
-        .modal.active { display:flex; }
-        .modal-box { background:var(--surface); border:1px solid var(--ice); padding:20px 16px; width:100%; max-width:340px; text-align:center; border-radius:var(--radius); }
-
-        .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%); padding:8px 16px; border:1px solid var(--ice); background:rgba(15,28,50,0.95); color:var(--ice); font-size:9px; z-index:3000; letter-spacing:1px; text-transform:uppercase; border-radius:6px; }
-
-        .admin-tabs { display:flex; gap:4px; margin-bottom:8px; }
-        .admin-tab { padding:5px 10px; border:1px solid var(--border); background:transparent; color:var(--text2); font-size:8px; cursor:pointer; border-radius:4px; }
-        .admin-tab.active { border-color:var(--gold); color:var(--gold); }
-
-        ::-webkit-scrollbar { width:3px; } ::-webkit-scrollbar-thumb { background:var(--ice); border-radius:2px; }
+        /* CUSTOM SCROLL */
+        ::-webkit-scrollbar { width:4px; }
+        ::-webkit-scrollbar-thumb { background:var(--gold-dim); }
 
         @media (max-width:768px) {
-            .sidebar { width:60px; }
-            .sidebar-link span, .sidebar-logo, .sidebar-user span { display:none; }
-            .sidebar-link { justify-content:center; padding:12px 8px; font-size:14px; }
-            .sidebar-user { justify-content:center; }
-            .mini-chat { width:100%; height:200px; right:0; border-radius:0; }
-            .countdown-num { font-size:22px; }
-            .stats-bar { gap:10px; font-size:7px; }
+            .sidebar { width:0; display:none; }
+            .welcome-title { font-size:32px; }
         }
     </style>
 </head>
 <body>
 
 <div class="app">
-    <!-- SIDEBAR -->
     <aside class="sidebar">
-        <div class="sidebar-logo">SANTA<span>WS</span></div>
-        <nav class="sidebar-nav" id="sidebar-nav"></nav>
-        <div class="sidebar-user" id="sidebar-user" onclick="showPage('profile')">
-            <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>🎅</text></svg>" id="sidebar-ava">
-            <span id="sidebar-name" style="color:var(--ice);">Гость</span>
-        </div>
+        <div class="logo">NEXUS</div>
+        <nav class="nav" id="sidebar-nav">
+            <!-- Nav links added by JS -->
+        </nav>
     </aside>
 
-    <!-- MAIN -->
-    <div class="main">
+    <main class="main">
         <header class="header">
-            <div class="header-title" id="header-title">ГЛАВНАЯ</div>
-            <div class="header-stats">
-                👥 <span id="stat-users">0</span> эльфов
-                💬 <span id="stat-msgs">0</span> сообщений
-                📋 <span id="stat-topics">0</span> тем
-                🟢 <span id="stat-online">0</span> онлайн
+            <div class="header-status">System Status: <span>Operational</span></div>
+            <div id="auth-zone">
+                <button onclick="showLogin()" style="background:none; border:none; color:var(--gold); cursor:pointer; font-size:11px; letter-spacing:1px;">IDENTIFY_USER</button>
             </div>
         </header>
 
-        <div class="content" id="main-content"></div>
-
-        <!-- COUNTDOWN -->
-        <div class="countdown-bar">
-            🎄 ДО НОВОГО ГОДА: <span class="countdown-num" id="ny-count">0</span> ДНЕЙ
+        <div class="content" id="main-content">
+            <!-- Pages rendered here -->
         </div>
 
-        <!-- STATS -->
-        <div class="stats-bar">
-            ВСЕГО ПОСЕТИТЕЛЕЙ: <span id="total-visitors">0</span>
-            | СЕГОДНЯ: <span id="today-visitors">0</span>
-            | АДМИНОВ: <span>2</span>
-            | МОДЕРОВ: <span>3</span>
+        <div class="footer-bar">
+            <div>OBJECTIVE: NEW YEAR 2027</div>
+            <div id="ny-timer">-- DAYS LEFT</div>
         </div>
-    </div>
+    </main>
+</div>
 
-    <!-- MINI CHAT -->
-    <div class="mini-chat" id="mini-chat">
-        <div class="mini-chat-header" onclick="showPage('chat')">💬 МИНИ-ЧАТ</div>
-        <div class="mini-chat-msgs" id="mini-chat-msgs"></div>
-        <div class="mini-chat-input">
-            <input type="text" id="mini-input" placeholder="Сообщение...">
-            <button onclick="sendMiniChat()">→</button>
-        </div>
+<!-- Login Modal -->
+<div id="login-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:#0a0a0a; border:1px solid var(--gold); padding:40px; width:300px; text-align:center;">
+        <div class="logo">AUTH</div>
+        <input type="text" id="login-u" placeholder="USERNAME" style="margin-bottom:10px;">
+        <input type="password" id="login-p" placeholder="CREDENTIALS" style="margin-bottom:20px;">
+        <button class="btn-send" onclick="doLogin()" style="width:100%; height:40px;">ACCESS</button>
     </div>
 </div>
 
-<div class="modal" id="modal-container"></div>
-
 <script>
-// ===== DB =====
+// DATABASE
 const DB = {
-    get(k,d){ try{return JSON.parse(localStorage.getItem('sw_'+k))||d;}catch(e){return d;} },
-    set(k,v){ localStorage.setItem('sw_'+k,JSON.stringify(v)); }
+    get(k,d){ return JSON.parse(localStorage.getItem('nx_'+k))||d; },
+    set(k,v){ localStorage.setItem('nx_'+k,JSON.stringify(v)); }
 };
 
 let session = DB.get('session', null);
-let users = DB.get('users', [
-    { id:1, username:'Santa', password:'admin', role:'dev', avatar:'https://i.pravatar.cc/150?u=santa', status:'ДИРЕКТОР', nick_color:'#c8e6f5', bio:'', banned:false, friends:[], friendRequests:[], notifications:[] }
+let messages = DB.get('chat', [
+    {u:'SYSTEM', t:'Протокол Nexus инициирован.', d:'12:00'},
+    {u:'Santa', t:'Приветствую в главном узле управления.', d:'12:05'}
 ]);
-let messages = DB.get('chat', []);
-let topics = DB.get('topics', []);
-let news = DB.get('news', [
-    { title:'МАСТЕРСКАЯ ОТКРЫТА', text:'Добро пожаловать в Santa Workshop!' },
-]);
-let adminLog = DB.get('adminLog', []);
-let siteStats = DB.get('stats', { totalVisitors:1337, todayVisitors:42 });
 
-function save() {
-    DB.set('users',users); DB.set('chat',messages); DB.set('topics',topics);
-    DB.set('news',news); DB.set('adminLog',adminLog); DB.set('stats',siteStats);
-    if(session) DB.set('session',session);
-}
+const PAGES = {
+    home: `
+        <div class="welcome-center">
+            <div class="welcome-subtitle">ESTABLISHED 2026</div>
+            <h1 class="welcome-title">SANTA WORKSHOP</h1>
+            <div class="divider"></div>
+            <p class="welcome-subtitle">Автономный узел управления проектом "NEXUS". <br>Синхронизация данных, управление эльфами и разработка инструментов будущего.</p>
+            <div style="margin-top:40px;">
+                <button onclick="nav('chat')" style="background:none; border:1px solid var(--gold); color:var(--gold); padding:15px 40px; letter-spacing:3px; cursor:pointer; font-size:10px;">ENTER_CHANNEL</button>
+            </div>
+        </div>
+    `,
+    rules: `
+        <div class="welcome-center" style="justify-content: flex-start; text-align: left; align-items: flex-start;">
+            <span class="card-tag">Foundation</span>
+            <h1 class="welcome-title" style="font-size:32px; letter-spacing:5px;">КОДЕКС_СИСТЕМЫ</h1>
+            <div class="grid">
+                <div class="card">
+                    <span class="card-tag">Protocol 01</span>
+                    <h3 class="card-title">Анонимность</h3>
+                    <p class="card-text">Личность каждого участника Workshop защищена сквозным шифрованием. Раскрытие данных карается исключением.</p>
+                </div>
+                <div class="card">
+                    <span class="card-tag">Protocol 02</span>
+                    <h3 class="card-title">Иерархия</h3>
+                    <p class="card-text">Слово Директора (Santa) является финальной командой для всех узлов системы.</p>
+                </div>
+                <div class="card">
+                    <span class="card-tag">Protocol 03</span>
+                    <h3 class="card-title">Чистота</h3>
+                    <p class="card-text">Никакого спама, рекламы или деструктивного кода в общих каналах связи.</p>
+                </div>
+            </div>
+        </div>
+    `,
+    chat: `
+        <div style="height:100%; display:flex; flex-direction:column;">
+            <div class="chat-container">
+                <div class="chat-msgs" id="chat-flow"></div>
+                <div class="chat-input">
+                    <input type="text" id="ci" placeholder="Введите сообщение для узла...">
+                    <button class="btn-send" onclick="send()">SEND</button>
+                </div>
+            </div>
+        </div>
+    `,
+    about: `
+         <div class="welcome-center" style="text-align: left; align-items: flex-start;">
+            <span class="card-tag">Information</span>
+            <h1 class="welcome-title" style="font-size:32px;">O_ПРОЕКТЕ</h1>
+            <div class="card" style="width:100%;">
+                <p class="card-text">NEXUS — это зашифрованная среда для координации творческих и технических групп. Мы переосмыслили мастерскую Санты как цифровой бастион, где каждый "подарок" — это строка кода, а каждый "эльф" — архитектор новой реальности.</p>
+            </div>
+        </div>
+    `,
+    support: `
+        <div class="welcome-center">
+            <h1 class="welcome-title" style="font-size:24px;">СВЯЗЬ_С_ЦЕНТРОМ</h1>
+            <input type="text" placeholder="THEME" style="max-width:400px; margin-bottom:10px;">
+            <textarea placeholder="MESSAGE" style="width:100%; max-width:400px; height:100px; background:rgba(255,255,255,0.03); border:1px solid var(--border); color:#fff; padding:15px; outline:none; font-family:inherit; font-size:12px; margin-bottom:20px;"></textarea>
+            <button class="btn-send" style="height:50px; padding:0 50px;">SEND_SIGNAL</button>
+        </div>
+    `
+};
 
-// Update stats
-siteStats.totalVisitors++;
-siteStats.todayVisitors = Math.floor(Math.random()*50)+10;
-save();
-
-// ===== SIDEBAR =====
-const NAV = [
-    { id:'home', label:'ГЛАВНАЯ', icon:'🏠' },
-    { id:'news', label:'НОВОСТИ', icon:'📰' },
-    { id:'chat', label:'ЧАТ', icon:'💬' },
-    { id:'forum', label:'ФОРУМ', icon:'📋' },
-    { id:'friends', label:'ДРУЗЬЯ', icon:'👥' },
-    { id:'rules', label:'КОДЕКС', icon:'📜' },
-    { id:'support', label:'ПОДДЕРЖКА', icon:'🆘' },
-    { id:'about', label:'О НАС', icon:'ℹ️' },
-    { id:'profile', label:'ПРОФИЛЬ', icon:'👤' },
+const MENU = [
+    {id:'home', label:'Главная'},
+    {id:'rules', label:'Кодекс'},
+    {id:'chat', label:'Канал'},
+    {id:'about', label:'О проекте'},
+    {id:'support', label:'Поддержка'}
 ];
 
-function buildSidebar() {
-    document.getElementById('sidebar-nav').innerHTML = NAV.map(n =>
-        `<button class="sidebar-link" onclick="showPage('${n.id}')">${n.icon} <span>${n.label}</span></button>`
-    ).join('');
+function nav(id) {
+    document.getElementById('main-content').innerHTML = `<div class="page active">${PAGES[id]}</div>`;
+    document.querySelectorAll('.nav-link').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('onclick').includes(id));
+    });
+    if(id === 'chat') renderChat();
+    updateHeader();
 }
 
-function showPage(id) {
-    document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
-    const btn = document.querySelector(`.sidebar-link[onclick="showPage('${id}')"]`);
-    if(btn) btn.classList.add('active');
-    document.getElementById('header-title').innerText = NAV.find(n=>n.id===id)?.label || '';
-    renderPage(id);
+function renderChat() {
+    const flow = document.getElementById('chat-flow');
+    if(!flow) return;
+    flow.innerHTML = messages.map(m => `
+        <div class="msg">
+            <div class="msg-meta">${m.u} // ${m.d}</div>
+            <div class="msg-body">${m.t}</div>
+        </div>
+    `).join('');
+    flow.scrollTop = flow.scrollHeight;
 }
 
-function renderPage(id) {
-    const c = document.getElementById('main-content');
-    switch(id) {
-        case 'home': c.innerHTML = renderHome(); break;
-        case 'news': c.innerHTML = renderNews(); break;
-        case 'chat': c.innerHTML = renderChat(); break;
-        case 'forum': c.innerHTML = renderForum(); break;
-        case 'friends': c.innerHTML = renderFriends(); break;
-        case 'rules': c.innerHTML = renderRules(); break;
-        case 'support': c.innerHTML = renderSupport(); break;
-        case 'about': c.innerHTML = renderAbout(); break;
-        case 'profile': c.innerHTML = renderProfile(); break;
+function send() {
+    const i = document.getElementById('ci');
+    if(!i.value || !session) return;
+    messages.push({ u: session.u, t: i.value, d: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
+    i.value = '';
+    DB.set('chat', messages);
+    renderChat();
+}
+
+function updateHeader() {
+    const az = document.getElementById('auth-zone');
+    if(session) {
+        az.innerHTML = `<span style="font-size:11px; letter-spacing:1px; color:var(--gold)">USER_ID: ${session.u}</span> <button onclick="logout()" style="background:none; border:none; color:var(--text-dim); cursor:pointer; margin-left:15px; font-size:10px;">[EXIT]</button>`;
     }
-    updateSidebar();
 }
 
-function updateSidebar() {
-    document.getElementById('sidebar-ava').src = session ? session.avatar : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>🎅</text></svg>";
-    document.getElementById('sidebar-name').innerText = session ? session.username : 'Гость';
-    document.getElementById('sidebar-name').style.color = session ? session.nick_color : 'var(--ice)';
-    document.getElementById('stat-users').innerText = users.filter(u=>!u.banned).length;
-    document.getElementById('stat-msgs').innerText = messages.length;
-    document.getElementById('stat-topics').innerText = topics.length;
-    document.getElementById('stat-online').innerText = Math.floor(Math.random()*8)+2;
-    document.getElementById('total-visitors').innerText = siteStats.totalVisitors.toLocaleString();
-    document.getElementById('today-visitors').innerText = siteStats.todayVisitors;
-    // Mini chat
-    document.getElementById('mini-chat-msgs').innerHTML = messages.slice(-5).map(m =>
-        `<div style="padding:3px 0;"><b style="color:${m.nick_color||'var(--ice)'};font-size:7px;">${esc(m.username)}:</b> <span style="font-size:7px;">${esc(m.text.substring(0,40))}</span></div>`
+function showLogin() { document.getElementById('login-modal').style.display = 'flex'; }
+function doLogin() {
+    const u = document.getElementById('login-u').value, p = document.getElementById('login-p').value;
+    if(u === 'Santa' && p === 'admin') {
+        session = {u: 'Santa'};
+        DB.set('session', session);
+        document.getElementById('login-modal').style.display = 'none';
+        updateHeader();
+        nav('home');
+    }
+}
+function logout() { session = null; DB.set('session', null); location.reload(); }
+
+function init() {
+    document.getElementById('sidebar-nav').innerHTML = MENU.map(m => 
+        `<button class="nav-link" onclick="nav('${m.id}')">${m.label}</button>`
     ).join('');
-    // NY counter
-    const now = new Date(), ny = new Date(now.getFullYear()+1,0,1);
-    document.getElementById('ny-count').innerText = Math.ceil((ny-now)/86400000);
+    
+    const now = new Date(), ny = new Date(2027, 0, 1);
+    document.getElementById('ny-timer').innerText = Math.ceil((ny-now)/86400000) + " DAYS LEFT";
+    
+    nav('home');
 }
 
-// ===== MINI CHAT =====
-function sendMiniChat() {
-    if(!session) return toast('ВОЙДИТЕ');
-    const inp = document.getElementById('mini-input');
-    if(!inp.value.trim()) return;
-    messages.push({username:session.username,role:session.role,nick_color:session.nick_color,text:inp.value.trim().substring(0,200),time:new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})});
-    if(messages.length>100) messages = messages.slice(-100);
-    save(); inp.value = ''; updateSidebar();
-}
-
-// ===== PAGES =====
-function renderHome() {
-    return `<div class="card card-gold" style="text-align:center;padding:40px;">
-        <div style="font-size:48px;">🎅</div>
-        <h2 style="font-family:'Playfair Display',serif;color:var(--ice);margin:8px 0;">ДОБРО ПОЖАЛОВАТЬ</h2>
-        <p style="color:var(--text2);font-size:10px;">В Мастерскую Санты. Общайтесь, создавайте темы, делитесь идеями.</p>
-    </div>
-    <div class="card">${news.slice(-3).reverse().map(n=>`<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);"><b style="color:var(--gold);font-size:9px;">${esc(n.title)}</b><p style="font-size:8px;color:var(--text2);">${esc(n.text)}</p></div>`).join('')}</div>`;
-}
-
-function renderNews() {
-    let html = news.slice().reverse().map(n=>`<div class="card"><b style="color:var(--gold);">${esc(n.title)}</b><p style="font-size:9px;color:var(--text2);">${esc(n.text)}</p></div>`).join('');
-    if(session&&(session.role==='dev'||session.role==='admin')) html = `<div class="card"><b style="color:var(--ice);">ДОБАВИТЬ</b><input type="text" id="news-title" placeholder="Заголовок"><textarea id="news-text" placeholder="Текст"></textarea><button class="btn btn-fill btn-sm" onclick="addNews()">ОПУБЛИКОВАТЬ</button></div>` + html;
-    return html;
-}
-function addNews(){const t=document.getElementById('news-title').value.trim(),x=document.getElementById('news-text').value.trim();if(!t||!x)return;news.push({title:t,text:x});adminLog.push({action:`Новость:${t}`,by:session.username,time:new Date().toLocaleString()});save();showPage('news');}
-
-function renderChat(){
-    return `<div class="card" style="height:350px;display:flex;flex-direction:column;"><b style="color:var(--ice);">ЧАТ</b>
-        <div style="flex:1;overflow-y:auto;margin:6px 0;">${messages.length===0?'<p style="color:var(--text2);text-align:center;padding:30px;">ПУСТО</p>':messages.slice(-40).map(m=>`<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02);font-size:9px;"><span class="badge">${m.role}</span> <b style="color:${m.nick_color||'var(--ice)'};">${esc(m.username)}:</b> ${esc(m.text)}</div>`).join('')}</div>
-        <form onsubmit="sendMainChat(event)" style="display:flex;gap:4px;"><input type="text" id="main-chat-input" placeholder="..." style="flex:1;margin:0;"><button class="btn btn-fill btn-sm">→</button></form>
-    </div>`;
-}
-function sendMainChat(e){e.preventDefault();if(!session)return;const inp=document.getElementById('main-chat-input');if(!inp.value.trim())return;messages.push({username:session.username,role:session.role,nick_color:session.nick_color,text:inp.value.trim().substring(0,300),time:new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})});if(messages.length>100)messages=messages.slice(-100);save();showPage('chat');updateSidebar();}
-
-function renderForum(){
-    return `<div class="card"><b style="color:var(--ice);">ФОРУМ</b>${session?`<form onsubmit="createTopic(event)" style="display:flex;gap:4px;margin:6px 0;"><input type="text" id="topic-input" placeholder="Тема..." style="flex:1;margin:0;"><button class="btn btn-fill btn-sm">+</button></form>`:''}${topics.length===0?'<p style="color:var(--text2);">НЕТ ТЕМ</p>':topics.slice().reverse().map(t=>`<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);"><b style="color:var(--ice);">${esc(t.title)}</b><div style="font-size:7px;color:var(--text2);">${esc(t.author)}</div></div>`).join('')}</div>`;
-}
-function createTopic(e){e.preventDefault();if(!session)return;const inp=document.getElementById('topic-input');if(!inp.value.trim())return;topics.push({title:inp.value.trim(),author:session.username});save();showPage('forum');toast('ТЕМА СОЗДАНА');}
-
-function renderFriends(){
-    if(!session)return'<div class="card"><p style="text-align:center;color:var(--text2);">ВОЙДИТЕ</p></div>';
-    return`<div class="card"><b style="color:var(--ice);">ДРУЗЬЯ</b><form onsubmit="addFriend(event)" style="display:flex;gap:4px;margin:6px 0;"><input type="text" id="friend-input" placeholder="Логин..." style="flex:1;margin:0;"><button class="btn btn-fill btn-sm">+</button></form>${(session.friends||[]).length===0?'<p style="color:var(--text2);font-size:8px;">НЕТ</p>':session.friends.map(f=>`<div style="padding:3px;font-size:9px;">👤 ${f} <button class="btn btn-sm btn-fill" onclick="openPM('${f}')" style="font-size:6px;">ЛС</button></div>`).join('')}${(session.friendRequests||[]).length>0?`<div style="margin-top:6px;"><b style="color:var(--gold);">ЗАЯВКИ:</b>${session.friendRequests.map(f=>`<div style="padding:3px;font-size:9px;">${f} <button class="btn btn-sm btn-fill" onclick="acceptFriend('${f}')" style="font-size:6px;">✓</button></div>`).join('')}</div>`:''}</div>`;
-}
-function addFriend(e){e.preventDefault();if(!session)return;const n=document.getElementById('friend-input').value.trim();if(!n||n===session.username)return;const t=users.find(u=>u.username===n);if(!t)return toast('НЕ НАЙДЕН');if((session.friends||[]).includes(n))return toast('УЖЕ ДРУГ');if(!t.friendRequests)t.friendRequests=[];t.friendRequests.push(session.username);save();showPage('friends');toast('ЗАЯВКА ОТПРАВЛЕНА');}
-function acceptFriend(n){if(!session)return;if(!session.friends)session.friends=[];session.friends.push(n);session.friendRequests=(session.friendRequests||[]).filter(f=>f!==n);const t=users.find(u=>u.username===n);if(t){if(!t.friends)t.friends=[];t.friends.push(session.username);}save();showPage('friends');toast('ДРУГ ДОБАВЛЕН');}
-function openPM(u){if(!session)return;const k=[session.username,u].sort().join('_');let pm=DB.get('pm_'+k,[]);const modal=document.getElementById('modal-container');modal.classList.add('active');modal.innerHTML=`<div class="modal-box" style="text-align:left;max-height:70vh;overflow-y:auto;"><b style="color:var(--ice);">ЛС: ${u}</b><div style="margin:8px 0;max-height:200px;overflow-y:auto;">${pm.length===0?'<p style="color:var(--text2);font-size:9px;">ПУСТО</p>':pm.map(m=>`<div style="padding:3px;font-size:9px;"><b style="color:${m.from===session.username?session.nick_color:'var(--gold)'};">${m.from}:</b> ${esc(m.text)}</div>`).join('')}</div><form onsubmit="sendPM(event,'${u}','${k}')" style="display:flex;gap:3px;"><input type="text" id="pm-input" placeholder="..." style="flex:1;margin:0;"><button class="btn btn-fill btn-sm">→</button></form><button class="btn btn-sm" style="margin-top:6px;" onclick="closeModal()">ЗАКРЫТЬ</button></div>`;}
-function sendPM(e,u,k){e.preventDefault();const inp=document.getElementById('pm-input');if(!inp.value.trim())return;let pm=DB.get('pm_'+k,[]);pm.push({from:session.username,text:inp.value.trim()});DB.set('pm_'+k,pm);const t=users.find(x=>x.username===u);if(t){if(!t.notifications)t.notifications=[];t.notifications.push({type:'pm',from:session.username,text:inp.value.trim().substring(0,50)});}save();openPM(u);}
-
-function renderRules(){return`<div class="card card-gold" style="border:2px solid var(--gold);"><h3 style="text-align:center;color:var(--gold);font-family:'Playfair Display',serif;">КОДЕКС</h3><div style="font-size:9px;line-height:2;color:var(--text2);margin-top:8px;"><p><b style="color:var(--gold);">I.</b> Уважение.</p><p><b style="color:var(--gold);">II.</b> Чистота.</p><p><b style="color:var(--gold);">III.</b> Тайна.</p><p><b style="color:var(--gold);">IV.</b> Власть.</p></div><div style="text-align:right;margin-top:10px;color:var(--gold);font-family:'Playfair Display',serif;">SANTA CLAUS</div></div>`;}
-function renderSupport(){return'<div class="card"><b style="color:var(--ice);">ПОДДЕРЖКА</b><textarea id="sup-msg" placeholder="Опишите проблему..."></textarea><button class="btn btn-fill btn-sm" onclick="sendSupport()">ОТПРАВИТЬ</button></div>';}
-function sendSupport(){toast('ОТПРАВЛЕНО');document.getElementById('sup-msg').value='';}
-function renderAbout(){return'<div class="card"><b style="color:var(--ice);">О НАС</b><p style="font-size:10px;color:var(--text2);line-height:1.6;margin-top:6px;">Santa Workshop — закрытое сообщество. Версия 9.0.</p></div>';}
-
-// ===== PROFILE =====
-function renderProfile(){
-    if(!session)return`<div class="card" style="text-align:center;"><b style="color:var(--ice);">ПРОФИЛЬ</b><p style="color:var(--text2);margin:8px 0;">Войдите или зарегистрируйтесь</p><button class="btn btn-fill btn-sm" onclick="showLogin()">ВХОД</button><button class="btn btn-sm" style="margin-top:4px;" onclick="showRegister()">РЕГИСТРАЦИЯ</button></div>`;
-    return`<div class="card" style="text-align:center;"><img src="${session.avatar}" style="width:72px;height:72px;border-radius:50%;border:2px solid var(--ice);"><div style="margin-top:4px;"><span class="badge">${session.role}</span></div><h3 style="color:${session.nick_color};">${session.username}</h3><p style="font-size:9px;color:var(--text2);">${session.status}</p>${session.bio?`<p style="font-size:8px;color:var(--text2);">${esc(session.bio)}</p>`:''}</div>
-    <div class="card"><b style="color:var(--ice);">РЕДАКТОР</b><form onsubmit="saveProfile(event)" style="margin-top:4px;"><input type="text" id="edit-name" value="${session.username}"><input type="text" id="edit-status" value="${session.status}"><input type="text" id="edit-bio" value="${session.bio||''}" placeholder="О себе"><input type="text" id="edit-avatar" value="${session.avatar}"><label style="font-size:7px;color:var(--text2);">Цвет</label><input type="color" id="edit-color" value="${session.nick_color}"><input type="password" id="edit-pass" placeholder="Новый пароль"><button class="btn btn-fill btn-sm" style="width:100%;">СОХРАНИТЬ</button></form><button class="btn btn-sm" style="width:100%;margin-top:4px;border-color:var(--red);color:var(--red);" onclick="logout()">ВЫЙТИ</button></div>`;
-}
-function saveProfile(e){e.preventDefault();if(!session)return;const n=document.getElementById('edit-name').value.trim();if(n.length<3)return toast('ИМЯ ОТ 3');session.username=n;session.status=document.getElementById('edit-status').value.trim()||session.status;session.bio=document.getElementById('edit-bio').value.trim();session.avatar=document.getElementById('edit-avatar').value.trim()||session.avatar;session.nick_color=document.getElementById('edit-color').value;const p=document.getElementById('edit-pass').value;if(p&&p.length>=4)session.password=p;const idx=users.findIndex(u=>u.id===session.id);if(idx>=0)users[idx]=session;save();showPage('profile');updateSidebar();toast('СОХРАНЕНО');}
-
-// ===== AUTH =====
-function showLogin(){
-    const modal=document.getElementById('modal-container');modal.classList.add('active');
-    modal.innerHTML=`<div class="modal-box"><b style="color:var(--ice);">ВХОД</b><input type="text" id="auth-login" placeholder="Логин"><input type="password" id="auth-pass" placeholder="Пароль"><button class="btn btn-fill btn-sm" style="width:100%;" onclick="doLogin()">ВОЙТИ</button><button class="btn btn-sm" style="width:100%;margin-top:4px;" onclick="showRegister()">РЕГИСТРАЦИЯ</button><p style="font-size:7px;color:var(--text2);margin-top:6px;">Santa / admin</p></div>`;
-}
-function showRegister(){
-    const modal=document.getElementById('modal-container');modal.classList.add('active');
-    modal.innerHTML=`<div class="modal-box"><b style="color:var(--ice);">РЕГИСТРАЦИЯ</b><input type="text" id="reg-login" placeholder="Логин"><input type="password" id="reg-pass" placeholder="Пароль"><input type="text" id="reg-status" placeholder="Статус"><label style="font-size:7px;color:var(--text2);">Цвет</label><input type="color" id="reg-color" value="#c8e6f5"><button class="btn btn-fill btn-sm" style="width:100%;" onclick="doRegister()">СОЗДАТЬ</button><button class="btn btn-sm" style="width:100%;margin-top:4px;" onclick="showLogin()">НАЗАД</button></div>`;
-}
-function closeModal(){document.getElementById('modal-container').classList.remove('active');}
-function doLogin(){const u=document.getElementById('auth-login').value.trim(),p=document.getElementById('auth-pass').value;const user=users.find(x=>x.username===u&&x.password===p);if(!user)return toast('НЕВЕРНО');if(user.banned)return toast('БАН');session=user;save();closeModal();showPage('profile');updateSidebar();toast('ДОБРО ПОЖАЛОВАТЬ');}
-function doRegister(){const u=document.getElementById('reg-login').value.trim(),p=document.getElementById('reg-pass').value,s=document.getElementById('reg-status').value.trim()||'ГОСТЬ',c=document.getElementById('reg-color').value;if(u.length<3||p.length<4)return toast('ЛОГИН ОТ 3, ПАРОЛЬ ОТ 4');if(users.find(x=>x.username===u))return toast('ЗАНЯТО');users.push({id:Date.now(),username:u,password:p,role:'user',avatar:`https://i.pravatar.cc/150?u=${encodeURIComponent(u)}`,status:s,nick_color:c,bio:'',banned:false,friends:[],friendRequests:[],notifications:[]});save();closeModal();toast('АККАУНТ СОЗДАН');showLogin();}
-function logout(){session=null;DB.set('session',null);showPage('home');updateSidebar();}
-
-function toast(msg){const old=document.querySelector('.toast');if(old)old.remove();const t=document.createElement('div');t.className='toast';t.innerText=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2500);}
-function esc(s){const d=document.createElement('div');d.appendChild(document.createTextNode(s));return d.innerHTML;}
-
-// ===== INIT =====
-buildSidebar();showPage('home');updateSidebar();
-document.getElementById('modal-container').addEventListener('click',function(e){if(e.target===this)closeModal();});
+init();
 </script>
 
 </body>
